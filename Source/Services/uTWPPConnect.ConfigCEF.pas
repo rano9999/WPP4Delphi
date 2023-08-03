@@ -1,4 +1,4 @@
-﻿{####################################################################################################################
+{####################################################################################################################
   License
   Copyright 2022 WPPConnect Team https://wppconnect-team.github.io/
 
@@ -166,7 +166,7 @@ end;
 procedure TCEFConfig.UpdateDateIniFile;
 begin
   FPathJsUpdate := Now;
-  UpdateIniFile('TWPPConnect Comp', 'Ultima interação', FormatDateTime('dd/mm/yy hh:nn:ss', FPathJsUpdate));
+  UpdateIniFile('TWPPConnect Comp', 'Last Update', FormatDateTime('dd/mm/yy hh:nn:ss', FPathJsUpdate));
 end;
 
 procedure TCEFConfig.UpdateIniFile(const PSection, PKey, PValue: String);
@@ -192,7 +192,7 @@ procedure TCEFConfig.SetChromium(const Value: TChromium);
 Var
   LObj: TCOmponent;
 begin
-  //Acha o FORM que esta o componente
+  //Find the FORM that is the component
   try
     if FChromium = Value then
        Exit;
@@ -215,25 +215,25 @@ begin
              FInject := TWPPConnect(FChromiumForm.Owner);
         end else    //Achou
         begin
-          LObj          := LObj.Owner                //Nao Achou entao, continua procurando
+          LObj          := LObj.Owner                //Didn't find it, keep looking
         end;
       Until FChromiumForm <> Nil;
     Except
       raise Exception.Create(MSG_ExceptErrorLocateForm);
     end;
   Except
-     //Esse erro nunca deve acontecer.. o TESTADOR nao conseguiu pelo menos..
+     //This error should never happen.. the TESTER failed to at least..
   end;
 end;
 
 
 Procedure TCEFConfig.SetDefault;
 begin
-  if not FInDesigner then //padrão aqui é if not FInDesigner
+  if not FInDesigner then //default here is if not FINDesigner
   Begin
-    FIniFIle.WriteString ('Informacao', 'Aplicativo vinculado',    Application.ExeName);
-    FIniFIle.WriteBool   ('Informacao', 'Valor True',    True);
-    FIniFIle.WriteBool   ('Informacao', 'Valor False',   False);
+    FIniFIle.WriteString ('Information', 'Linked app',    Application.ExeName);
+    FIniFIle.WriteBool   ('Information', 'True Value',    True);
+    FIniFIle.WriteBool   ('Information', 'False Value',   False);
 
     SetDisableFeatures      := 'NetworkService,OutOfBlinkCors';
     SetEnableGPU            := FIniFIle.ReadBool  ('Path Defines', 'GPU',                 True);
@@ -256,8 +256,7 @@ begin
   Self.FrameworkDirPath   := '';
   Self.ResourcesDirPath   := '';
   Self.LocalesDirPath     := 'locales';
-  Self.cache              := 'cache';
-  //Self.UserDataPath       := 'User Data';
+  Self.Cache              := 'cache';
   Self.RootCache          := 'User Data'; //New CEF4Delphi Update to CEF 115.3.11
 end;
 
@@ -370,19 +369,19 @@ var
   LVReque, LVerIdent: String;
   FDirApp, Lx: String;
 begin
-  //ta lento pq estou conectado em um tunel estou daki ao meu pc.;. do meu pc a
+  //it's slow because I'm connected in a tunnel I'm away from my pc.;. from my pc to
   Result  := (Self.status = asInitialized);
   if (Result) Then
   Begin
-    //Ja iniciada!! cai fora!!
+    //Already started!! get out!!
     Exit;
   end;
 
   FInDesigner          := False;
   FDirApp              := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
   FIniFIle             := TIniFile.create(FDirApp + NomeArquivoIni);
-  Lx                   := FIniFIle.ReadString('TWPPConnect Comp', 'Ultima interação', '01/01/1500 05:00:00');
-  //Lx                   := FIniFIle.ReadString('TWPPConnect Comp', 'Ultima interação', FormatDateTime('dd/mm/yy hh:nn:ss', FPathJsUpdate));
+  Lx                   := FIniFIle.ReadString('TWPPConnect Comp', 'Last Update', '01/01/1500 05:00:00');
+  //Lx                   := FIniFIle.ReadString('TWPPConnect Comp', 'Last update', FormatDateTime('dd/mm/yy hh:nn:ss', FPathJsUpdate));
   FPathJS              := FDirApp + NomeArquivoInject;
   FErrorInt            := False;
   FStartTimeOut        := 5000; //(+- 5 Segundos)
@@ -418,8 +417,7 @@ begin
   If Pathcache            <> '' then
      Self.cache               := Pathcache;
   If PathUserDataPath     <> '' then
-     //Self.PathUserData        := PathUserDataPath; 
-     Self.RootCache           := PathUserDataPath; //CEF4Delphi Update to CEF 115.3.11
+     Self.RootCache           := PathUserDataPath; //New CEF4Delphi Update to CEF 115.3.11
   If PathLogFile          <> '' then
      Self.LogFile             := PathLogFile;
   If SetLogSeverity then
@@ -430,8 +428,7 @@ begin
   UpdateIniFile('Path Defines', 'Binary',        Self.ResourcesDirPath);
   UpdateIniFile('Path Defines', 'Locales',       Self.LocalesDirPath);
   UpdateIniFile('Path Defines', 'Cache',         Self.cache);
-  //UpdateIniFile('Path Defines', 'Data User',     Self.UserDataPath); //CEF4Delphi Update to CEF 115.3.11
-  UpdateIniFile('Path Defines', 'Data User',     Self.RootCache);
+  UpdateIniFile('Path Defines', 'Data User',     Self.RootCache); //New CEF4Delphi Update to CEF 115.3.11
   UpdateIniFile('Path Defines', 'Log File',      Self.LogFile);
   UpdateIniFile('Path Defines', 'Log Console',   LogConsole);
 
@@ -441,18 +438,18 @@ begin
 
   UpdateIniFile('TWPPConnect Comp', 'TWPPConnect Versão',   TWPPConnectVersion);
   UpdateIniFile('TWPPConnect Comp', 'Caminho JS'    ,   TWPPConnectJS_JSUrlPadrao);
-  UpdateIniFile('TWPPConnect Comp', 'CEF4 Versão'   ,   IntToStr(CEF_SUPPORTED_VERSION_MAJOR) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_MINOR)  +'.'+ IntToStr(CEF_SUPPORTED_VERSION_RELEASE) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_BUILD));
-  UpdateIniFile('TWPPConnect Comp', 'CHROME Versão' ,   IntToStr(CEF_CHROMEELF_VERSION_MAJOR) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_MINOR)  +'.'+ IntToStr(CEF_CHROMEELF_VERSION_RELEASE) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_BUILD));
+  UpdateIniFile('TWPPConnect Comp', 'CEF4 Version'   ,   IntToStr(CEF_SUPPORTED_VERSION_MAJOR) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_MINOR)  +'.'+ IntToStr(CEF_SUPPORTED_VERSION_RELEASE) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_BUILD));
+  UpdateIniFile('TWPPConnect Comp', 'CHROME Version' ,   IntToStr(CEF_CHROMEELF_VERSION_MAJOR) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_MINOR)  +'.'+ IntToStr(CEF_CHROMEELF_VERSION_RELEASE) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_BUILD));
   UpdateIniFile('TWPPConnect Comp', 'Dlls'          ,   LIBCEF_DLL + ' / ' + CHROMEELF_DLL);
   if Falterdo then
     UpdateDateIniFile;
 
 
-  //Chegou aqui, é porque os PATH são validos e pode continuar
-  inherited;  //Dispara a THREAD la do objeto PAI
+  //You got here, it's because the PATH are valid and you can continue
+  inherited;  //Fires the THREAD row of the FATHER object
 
   if Self.status <> asInitialized then
-    Exit; //estado invalido!!!! pode trer dado erro acima
+    Exit; //invalid state!!!! may have given error above
 
   Linicio := GetTickCount;
   try
