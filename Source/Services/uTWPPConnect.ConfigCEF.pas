@@ -257,7 +257,8 @@ begin
   Self.ResourcesDirPath   := '';
   Self.LocalesDirPath     := 'locales';
   Self.cache              := 'cache';
-  Self.UserDataPath       := 'User Data';
+  //Self.UserDataPath       := 'User Data';
+  Self.RootCache          := 'User Data'; //New CEF4Delphi Update to CEF 115.3.11
 end;
 
 
@@ -417,7 +418,8 @@ begin
   If Pathcache            <> '' then
      Self.cache               := Pathcache;
   If PathUserDataPath     <> '' then
-     Self.UserDataPath        := PathUserDataPath;
+     //Self.PathUserData        := PathUserDataPath; 
+     Self.RootCache           := PathUserDataPath; //CEF4Delphi Update to CEF 115.3.11
   If PathLogFile          <> '' then
      Self.LogFile             := PathLogFile;
   If SetLogSeverity then
@@ -428,7 +430,8 @@ begin
   UpdateIniFile('Path Defines', 'Binary',        Self.ResourcesDirPath);
   UpdateIniFile('Path Defines', 'Locales',       Self.LocalesDirPath);
   UpdateIniFile('Path Defines', 'Cache',         Self.cache);
-  UpdateIniFile('Path Defines', 'Data User',     Self.UserDataPath);
+  //UpdateIniFile('Path Defines', 'Data User',     Self.UserDataPath); //CEF4Delphi Update to CEF 115.3.11
+  UpdateIniFile('Path Defines', 'Data User',     Self.RootCache);
   UpdateIniFile('Path Defines', 'Log File',      Self.LogFile);
   UpdateIniFile('Path Defines', 'Log Console',   LogConsole);
 
